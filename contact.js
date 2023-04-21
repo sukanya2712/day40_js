@@ -40,7 +40,7 @@ class Contact {
     }
   }
   
-
+//------------------------------------------------------------------uc3------------------------------------------------------------------------------------------
   
   let addressBooks = [];
 
@@ -146,6 +146,81 @@ function promptYesNo(question, callback) {
       console.log("--------------");
     }
   }
+
+
+  //----------------------------------------------------------------------------UC4----------------------------------------------------------------------------
+  function editContacts(callback) {
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout
+    });
+  
+    rl.question("Enter the name of the address book to edit the contact in:", (name) => {
+      let index = findAddressBookByName(name);
+  
+      if (index === -1) {
+        // address book not found
+        promptYesNo("Address book not found. Do you want to create a new one?", () => {
+          createAddressBook();
+        });
+        return; 
+      }else{
+        rl.question("Enter the first name of the contact to edit:", (firstName) => {
+          rl.question("Enter the last name of the contact to edit:", (lastName) => {
+            let contactIndex = addressBooks[index].contacts.findIndex(contact => contact.firstName === firstName && contact.lastName === lastName);
+    
+            if (contactIndex === -1) {
+              console.log("Contact not found.");
+              rl.close();
+              return;
+            }else{
+              rl.question("Enter the new first name of the contact:", (newFirstName) => {
+                rl.question("Enter the new last name of the contact:", (newLastName) => {
+                  rl.question("Enter the new address of the contact:", (newAddress) => {
+                    rl.question("Enter the new city of the contact:", (newCity) => {
+                      rl.question("Enter the new state of the contact:", (newState) => {
+                        rl.question("Enter the new zip code of the contact:", (newZip) => {
+                          rl.question("Enter the new phone number of the contact (format: xxx-xxx-xxxx):", (newPhone) => {
+                            rl.question("Enter the new email address of the contact:", (newEmail) => {
+                              let contact = addressBooks[index].contacts[contactIndex];
+                            contact.firstName = newFirstName;
+                            contact.lastName = newLastName;
+                            contact.address = newAddress;
+                            contact.city = newCity;
+                            contact.state = newState;
+                            contact.zip = newZip;
+                            contact.phone = newPhone;
+                            contact.email = newEmail;
+                            rl.close();
+                            callback();
+                          });
+                        });
+                      });
+                    });
+                  });
+                });
+              });
+            });
+            }
+          });
+        });
+      }
+  });
+}
+  
+     
+  
+         
+                          
+                        
+   
+  
+  
+  
+  
+  
+  
+  
   
   // main function
   function runAddressBookProgram() {
@@ -153,7 +228,7 @@ function promptYesNo(question, callback) {
       input: process.stdin,
       output: process.stdout
     });
-    rl.question("Enter 1 to create a new address book : ,   2 to add a contact :, or   3 to exit : , 4 to display addressbooks and contacts : ", (action) => {
+    rl.question("Enter:\n1 to create a new address book\n2 to add a contact\n3 to exit\n4 to display addressbooks and contacts\n5 to edit contacts\n", (action) => {
       rl.close();
       switch (action) {
         case "1":
@@ -169,9 +244,14 @@ function promptYesNo(question, callback) {
         case "3":
           return;
         case "4":
-            displayAddressBooks();
+          displayAddressBooks();
+          runAddressBookProgram();
+          break;
+        case "5":
+          editContacts(() => {
             runAddressBookProgram();
-            break;  
+          });
+          break;  
         default:
           console.log("Invalid input. Please try again.");
           runAddressBookProgram();
