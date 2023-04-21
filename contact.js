@@ -246,7 +246,14 @@ function promptYesNo(question, callback) {
 
 
 
-
+//------------------------------------------------------------------uc6-------------------------------------------------------------------------------------------
+function noofContacts(){
+  console.log(`no of addressbooks : ${addressBooks.length}`);
+  console.log("addressbooks with names and no of contacts : ");
+  for (let i = 0; i < addressBooks.length; i++) {
+    console.log(`addressbookName: ${addressBooks[i].name}   no of contacts: ${addressBooks[i].contacts.length}`);
+  }
+}
 
 
 
@@ -273,7 +280,7 @@ function promptYesNo(question, callback) {
       input: process.stdin,
       output: process.stdout
     });
-    rl.question("Enter:\n1 to create a new address book\n2 to add a contact\n3 to exit\n4 to display addressbooks and contacts\n5 to edit contacts\n6 to delete contacts\n", (action) => {
+    rl.question("Enter:\n1 to create a new address book\n2 to add a contact\n3 to exit\n4 to display addressbooks and contacts\n5 to edit contacts\n6 to delete contacts\n7 to display no of addressbooks & conacts in addressbooks ", (action) => {
       rl.close();
       switch (action) {
         case "1":
@@ -298,10 +305,14 @@ function promptYesNo(question, callback) {
           });
           break;
         case "6":
-            deleteContacts(() => {
-              runAddressBookProgram();
-            });
-            break;   
+          deleteContacts(() => {
+            runAddressBookProgram();
+          });
+          break;
+        case "7":
+         noofContacts();
+         runAddressBookProgram();
+          break;   
         default:
           console.log("Invalid input. Please try again.");
           runAddressBookProgram();
