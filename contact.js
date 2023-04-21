@@ -208,8 +208,53 @@ function promptYesNo(question, callback) {
   });
 }
   
-     
+ 
+
+//-------------------------------------------------------------uc5---------------------------------------------------------------------------------------------
+  function deleteContacts(callback) {
+    const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+    });
+
+    rl.question("Enter the name of the address book to delete the contact in:", (name) => {
+    let index = findAddressBookByName(name);
+
+    if (index === -1) {
+      // address book not found
+      console.log("addressbook not found");
+      return; 
+    }else{
+      rl.question("Enter the first name of the contact to delete:", (firstName) => {
+        rl.question("Enter the last name of the contact to delete:", (lastName) => {
+          let contactIndex = addressBooks[index].contacts.findIndex(contact => contact.firstName === firstName && contact.lastName === lastName);
   
+          if (contactIndex === -1) {
+            console.log("Contact not found.");
+            rl.close();
+            return;
+          }else{
+            addressBooks[index].contacts.splice(contactIndex, 1);
+            console.log("contact deleted sunceefully");
+            callback();
+          }
+        });
+      });
+      }   
+    });
+  }
+
+
+
+
+
+
+
+
+
+
+
+
          
                           
                         
@@ -228,7 +273,7 @@ function promptYesNo(question, callback) {
       input: process.stdin,
       output: process.stdout
     });
-    rl.question("Enter:\n1 to create a new address book\n2 to add a contact\n3 to exit\n4 to display addressbooks and contacts\n5 to edit contacts\n", (action) => {
+    rl.question("Enter:\n1 to create a new address book\n2 to add a contact\n3 to exit\n4 to display addressbooks and contacts\n5 to edit contacts\n6 to delete contacts\n", (action) => {
       rl.close();
       switch (action) {
         case "1":
@@ -251,7 +296,12 @@ function promptYesNo(question, callback) {
           editContacts(() => {
             runAddressBookProgram();
           });
-          break;  
+          break;
+        case "6":
+            deleteContacts(() => {
+              runAddressBookProgram();
+            });
+            break;   
         default:
           console.log("Invalid input. Please try again.");
           runAddressBookProgram();
